@@ -36,63 +36,71 @@
             <section class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
                 <h3 class="text-base font-bold text-slate-800 mb-4 pb-2 border-b">➕ Novo Cadastro</h3>
                 <form id="alunoForm" class="space-y-3.5">
-    <div>
-        <label class="block text-[10px] font-bold uppercase text-slate-600 mb-1">Nome Completo</label>
-        <input type="text" id="nome" required class="w-full px-3 py-2 border rounded-lg text-sm bg-slate-50 focus:ring-2 focus:ring-orange-500 focus:outline-none">
-    </div>
-    <div class="grid grid-cols-2 gap-2">
-        <div>
-            <label class="block text-[10px] font-bold uppercase text-slate-600 mb-1">WhatsApp</label>
-            <input type="tel" id="whatsapp" required class="w-full px-3 py-2 border rounded-lg text-sm bg-slate-50 focus:ring-2 focus:ring-orange-500 focus:outline-none">
-        </div>
-        <div>
-            <label class="block text-[10px] font-bold uppercase text-slate-600 mb-1">E-mail</label>
-            <input type="email" id="email" required class="w-full px-3 py-2 border rounded-lg text-sm bg-slate-50 focus:ring-2 focus:ring-orange-500 focus:outline-none">
-        </div>
-    </div>
-    <div class="grid grid-cols-2 gap-2">
-        <div>
-            <label class="block text-[10px] font-bold uppercase text-slate-600 mb-1">Modalidade</label>
-            <select id="modalidade" class="w-full px-3 py-2 border rounded-lg text-sm bg-slate-50 focus:outline-none">
-                <option value="Vôlei de Praia">Vôlei de Praia</option>
-                <option value="Beach Tennis">Beach Tennis</option>
-                <option value="Futevôlei">Futevôlei</option>
-            </select>
-        </div>
-        <div>
-            <label class="block text-[10px] font-bold uppercase text-slate-600 mb-1">Plano</label>
-            <select id="plano" class="w-full px-3 py-2 border rounded-lg text-sm bg-slate-50 focus:outline-none">
-                <option value="Mensal">Mensal (1 Mês)</option>
-                <option value="Trimestral">Trimestral (3 Meses)</option>
-            </select>
-        </div>
-    </div>
-    <div>
-        <label class="block text-[10px] font-bold uppercase text-slate-600 mb-1">Valor da Mensalidade (R$)</label>
-        <input type="number" id="valor" required class="w-full px-3 py-2 border rounded-lg text-sm bg-slate-50 focus:outline-none">
-    </div>
-    <button type="submit" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-2.5 rounded-lg text-sm transition shadow-sm">Salvar Aluno</button>
-</form>
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase text-slate-600 mb-1">Nome Completo</label>
+                        <input type="text" id="nome" required class="w-full px-3 py-2 border rounded-lg text-sm bg-slate-50 focus:ring-2 focus:ring-orange-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase text-slate-600 mb-1">WhatsApp</label>
+                        <input type="tel" id="whatsapp" required class="w-full px-3 py-2 border rounded-lg text-sm bg-slate-50 focus:ring-2 focus:ring-orange-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase text-slate-600 mb-1">E-mail</label>
+                        <input type="email" id="email" required class="w-full px-3 py-2 border rounded-lg text-sm bg-slate-50 focus:ring-2 focus:ring-orange-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase text-slate-600 mb-1">Modalidade</label>
+                        <select id="modalidade" class="w-full px-3 py-2 border rounded-lg text-sm bg-slate-50 focus:outline-none">
+                            <option value="Vôlei de Praia">Vôlei de Praia</option>
+                            <option value="Beach Tennis">Beach Tennis</option>
+                            <option value="Futevôlei">Futevôlei</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase text-slate-600 mb-1">Mensalidade (R$)</label>
+                        <input type="number" id="valor" required class="w-full px-3 py-2 border rounded-lg text-sm bg-slate-50 focus:outline-none">
+                    </div>
+                    <button type="submit" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-2.5 rounded-lg text-sm transition shadow-sm cursor-pointer">Salvar Aluno</button>
+                </form>
             </section>
 
-            <section class="xl:col-span-2 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                <div class="p-4 sm:p-6 bg-slate-50 border-b font-bold text-slate-800 text-sm sm:text-base">👥 Alunos Matriculados</div>
-                
-                <div class="hidden md:block w-full overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="bg-slate-100 text-slate-600 text-xs uppercase font-bold border-b">
-                                <th class="p-4">Nome / Contato</th>
-                                <th class="p-4">Modalidade</th>
-                                <th class="p-4">Cadastro</th>
-                                <th class="p-4 text-center">Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabelaAlunosDesktop" class="text-sm divide-y text-slate-700"></tbody>
-                    </table>
+            <section class="xl:col-span-2 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col justify-between min-h-[500px]">
+                <div>
+                    <div class="p-4 bg-slate-50 border-b flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3">
+                        <div class="font-bold text-slate-800 text-sm sm:text-base">👥 Alunos Matriculados</div>
+                        <div class="relative flex-1 sm:max-w-xs">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 text-sm">🔍</span>
+                            <input type="text" id="inputPesquisa" oninput="escutarPesquisa()" placeholder="Buscar atleta... (mín. 3 letras)" class="w-full pl-9 pr-3 py-1.5 border rounded-xl text-xs bg-white focus:ring-2 focus:ring-orange-500 focus:outline-none font-medium">
+                        </div>
+                    </div>
+                    
+                    <div class="hidden md:block w-full overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-100/70 text-slate-600 text-xs uppercase font-bold border-b">
+                                    <th class="p-4">Nome / Contato</th>
+                                    <th class="p-4">Modalidade</th>
+                                    <th class="p-4">Cadastro</th>
+                                    <th class="p-4 text-center">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabelaAlunosDesktop" class="text-sm divide-y text-slate-700"></tbody>
+                        </table>
+                    </div>
+
+                    <div id="listaAlunosMobile" class="block md:hidden p-4 space-y-4 bg-slate-50/50"></div>
+                    
+                    <div id="msgSemResultados" class="p-12 text-center text-slate-400 font-medium hidden">Nenhum atleta encontrado.</div>
                 </div>
 
-                <div id="listaAlunosMobile" class="block md:hidden p-4 space-y-4 bg-slate-50/50"></div>
+                <div class="p-4 bg-slate-50 border-t flex items-center justify-between text-xs font-semibold text-slate-600">
+                    <div id="infoPaginacao">Exibindo 0 de 0 atletas</div>
+                    <div class="flex items-center space-x-1">
+                        <button onclick="paginaAnterior()" id="btnAnterior" class="px-3 py-1.5 border bg-white rounded-lg hover:bg-slate-100 transition disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer">Anterior</button>
+                        <div id="botoesNumerados" class="flex items-center space-x-1"></div>
+                        <button onclick="proximaPagina()" id="btnProximo" class="px-3 py-1.5 border bg-white rounded-lg hover:bg-slate-100 transition disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer">Próximo</button>
+                    </div>
+                </div>
             </section>
         </div>
 
@@ -118,7 +126,6 @@
                     </div>
                     <div>
                         <h4 class="font-bold text-slate-800 mb-2 text-xs uppercase tracking-wider">Histórico Financeiro</h4>
-                        
                         <div class="hidden sm:block border rounded-xl overflow-hidden bg-white">
                             <table class="w-full text-left border-collapse text-xs">
                                 <thead>
@@ -132,7 +139,6 @@
                                 <tbody id="modalTabelaDesktop" class="divide-y"></tbody>
                             </table>
                         </div>
-
                         <div id="modalCardsMobile" class="block sm:hidden space-y-2"></div>
                     </div>
                 </div>
@@ -140,216 +146,288 @@
         </div>
     </main>
 
-    <script>
-        let usuarioLogado = null;
+   <script>
+        let dadosAlunosGlobais = [];
+        let dadosFiltrados = [];
+        let paginaAtual = 1;
+        const itensPorPagina = 10;
 
-        window.onload = async function() {
-            usuarioLogado = verificarSessao();
-            if (usuarioLogado) {
-                await listarAlunos();
+        window.onload = function() {
+            if (verificarSessao()) {
+                baixarDadosSupabase();
+                configurarFormulario();
             }
         }
 
-        // CADASTRO DE ALUNO + CRIAÇÃO DA PRIMEIRA PARCELA
-        document.getElementById('alunoForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    
-    const botao = e.target.querySelector('button[type="submit"]');
-    botao.disabled = true;
-    botao.innerText = "Salvando...";
+        function verificarSessao() {
+            const sessao = localStorage.getItem('arena_session');
+            if (!sessao) {
+                window.location.href = 'index.html';
+                return false;
+            }
+            return true;
+        }
 
-    const nome = document.getElementById('nome').value;
-    const whatsapp = document.getElementById('whatsapp').value;
-    const email = document.getElementById('email').value;
-    const modalidade = document.getElementById('modalidade').value;
-    const plano = document.getElementById('plano').value;
-    const valorBase = parseFloat(document.getElementById('valor').value);
-    const hoje = new Date();
-
-    // 1. Salva o Aluno no Supabase
-    const { data: alunoSalvo, error: erroAluno } = await _supabase
-        .from('alunos')
-        .insert([{ nome, whatsapp, email, modalidade, valor: valorBase, dataCadastro: hoje.toLocaleDateString('pt-BR') }])
-        .select();
-
-    if (erroAluno) {
-        alert("Erro ao salvar aluno: " + erroAluno.message);
-        botao.disabled = false;
-        botao.innerText = "Salvar Aluno";
-        return;
-    }
-
-    const alunoId = alunoSalvo[0].id;
-    const qtdParcelas = plano === "Trimestral" ? 3 : 1;
-    const pagamentosParaInserir = [];
-
-    // 2. Gera as parcelas (1 se mensal, 3 se trimestral)
-    for (let i = 0; i < qtdParcelas; i++) {
-        const dataParcela = new Date(hoje.getFullYear(), hoje.getMonth() + i, 10);
-        const mesRef = `${String(dataParcela.getMonth() + 1).padStart(2, '0')}/${dataParcela.getFullYear()}`;
-        
-        pagamentosParaInserir.push({
-            alunoId: alunoId,
-            mes: mesRef,
-            vencimento: `10/${mesRef}`,
-            status: "Pendente",
-            valor: valorBase
-        });
-    }
-
-    const { error: erroPagamentos } = await _supabase
-        .from('pagamentos')
-        .insert(pagamentosParaInserir);
-
-    if (erroPagamentos) {
-        alert("Aluno criado, mas houve erro ao gerar as mensalidades: " + erroPagamentos.message);
-    } else {
-        alert(`Aluno cadastrado com sucesso! Plano ${plano} ativado.`);
-        document.getElementById('alunoForm').reset();
-        listarAlunos(); // Função que atualiza sua tabela na tela
-    }
-
-    botao.disabled = false;
-    botao.innerText = "Salvar Aluno";
-});
-
-        // LISTAGEM DE ALUNOS DO BANCO
-        async function listarAlunos() {
-            const tDesktop = document.getElementById('tabelaAlunosDesktop');
-            const lMobile = document.getElementById('listaAlunosMobile');
-            tDesktop.innerHTML = "<tr><td class='p-4 text-slate-500'>Carregando atletas...</td></tr>";
-            lMobile.innerHTML = "";
-
-            const { data: atletas, error } = await _supabase
+        // AJUSTE ISDELETED: Filtra apenas os alunos ativos no sistema
+        async function baixarDadosSupabase() {
+            const { data, error } = await _supabase
                 .from('alunos')
                 .select('*')
+                .eq('isDeleted', false) // Retorna apenas alunos ativos (false)
                 .order('nome', { ascending: true });
 
             if (error) {
-                alert("Erro ao buscar dados: " + error.message);
+                alert("Erro ao buscar alunos do banco: " + error.message);
                 return;
             }
 
-            tDesktop.innerHTML = "";
-            if(atletas.length === 0) {
-                tDesktop.innerHTML = "<tr><td class='p-4 text-slate-500'>Nenhum atleta matriculado.</td></tr>";
+            dadosAlunosGlobais = data || [];
+            dadosFiltrados = [...dadosAlunosGlobais];
+            paginaAtual = 1;
+            
+            renderizarListagemPaginada();
+        }
+
+        function escutarPesquisa() {
+            const termo = document.getElementById('inputPesquisa').value.trim().toLowerCase();
+
+            if (termo.length >= 3) {
+                dadosFiltrados = dadosAlunosGlobais.filter(aluno => 
+                    aluno.nome.toLowerCase().includes(termo) || 
+                    aluno.whatsapp.includes(termo) || 
+                    aluno.email.toLowerCase().includes(termo)
+                );
+            } else {
+                dadosFiltrados = [...dadosAlunosGlobais];
             }
 
-            atletas.forEach(aluno => {
-                // Desktop
+            paginaAtual = 1;
+            renderizarListagemPaginada();
+        }
+
+        function renderizarListagemPaginada() {
+            const tDesktop = document.getElementById('tabelaAlunosDesktop');
+            const lMobile = document.getElementById('listaAlunosMobile');
+            const msgSemDados = document.getElementById('msgSemResultados');
+
+            tDesktop.innerHTML = "";
+            lMobile.innerHTML = "";
+
+            if (dadosFiltrados.length === 0) {
+                msgSemDados.classList.remove('hidden');
+                atualizarControlesRodape(0);
+                return;
+            }
+            msgSemDados.classList.add('hidden');
+
+            const indiceInicio = (paginaAtual - 1) * itensPorPagina;
+            const indiceFim = indiceInicio + itensPorPagina;
+            const itensDaPagina = dadosFiltrados.slice(indiceInicio, indiceFim);
+
+            itensDaPagina.forEach(aluno => {
+                const dataFormatada = aluno.data_cadastro ? new Date(aluno.data_cadastro).toLocaleDateString('pt-BR') : '--';
+                
+                // Desktop UI
                 tDesktop.innerHTML += `
-                    <tr class="hover:bg-slate-50">
+                    <tr class="hover:bg-slate-50/80 transition-colors">
                         <td class="p-4">
                             <div class="font-bold text-slate-800">${aluno.nome}</div>
                             <div class="text-xs text-slate-500">${aluno.whatsapp} | ${aluno.email}</div>
                         </td>
                         <td class="p-4"><span class="bg-orange-100 text-orange-700 px-2 py-0.5 rounded text-xs font-bold">${aluno.modalidade}</span></td>
-                        <td class="p-4 text-slate-500 text-xs">${aluno.data_cadastro}</td>
+                        <td class="p-4 text-slate-500 text-xs">${dataFormatada}</td>
                         <td class="p-4 text-center space-x-2">
                             <button onclick="verSituacao(${aluno.id})" class="bg-blue-600 text-white text-xs px-2.5 py-1.5 rounded-lg font-medium hover:bg-blue-700 transition cursor-pointer">🔍 Ver Situação</button>
-                            <button onclick="excluirAluno(${aluno.id})" class="text-rose-600 text-xs font-bold hover:underline cursor-pointer">Excluir</button>
+                            <button onclick="excluirAluno(${aluno.id}, '${aluno.nome}')" class="text-rose-600 text-xs font-bold hover:underline cursor-pointer">Excluir</button>
                         </td>
                     </tr>
                 `;
 
-                // Mobile
+                // Mobile UI
                 lMobile.innerHTML += `
                     <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col space-y-2">
                         <div class="flex justify-between items-start">
                             <div>
-                                <h4 class="font-extrabold text-slate-800 text-base leading-tight">${aluno.nome}</h4>
+                                <h4 class="font-extrabold text-slate-800 text-sm leading-tight">${aluno.nome}</h4>
                                 <p class="text-xs text-slate-500 mt-0.5">${aluno.whatsapp}</p>
                             </div>
                             <span class="text-[10px] font-bold bg-orange-100 text-orange-700 px-2 py-0.5 rounded">${aluno.modalidade}</span>
                         </div>
-                        <div class="text-[11px] text-slate-400 font-medium">Cadastrado em: ${aluno.data_cadastro}</div>
-                        <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100">
-                            <button onclick="verSituacao(${aluno.id})" class="bg-blue-600 text-white text-xs py-2 rounded-xl font-bold shadow-sm text-center cursor-pointer">🔍 Ver Histórico</button>
-                            <button onclick="excluirAluno(${aluno.id})" class="border border-rose-200 text-rose-600 text-xs py-2 rounded-xl font-bold text-center cursor-pointer">🗑️ Remover</button>
+                        <div class="flex items-center justify-between pt-2 border-t border-slate-100">
+                            <span class="text-xs text-slate-400 font-medium">Desde: ${dataFormatada}</span>
+                            <div class="space-x-2">
+                                <button onclick="verSituacao(${aluno.id})" class="text-blue-600 font-bold text-xs">Ver Situação</button>
+                                <button onclick="excluirAluno(${aluno.id}, '${aluno.nome}')" class="text-rose-600 font-bold text-xs">Excluir</button>
+                            </div>
                         </div>
                     </div>
                 `;
             });
+
+            atualizarControlesRodape(dadosFiltrados.length);
         }
 
-        // DETALHES FINANCEIROS INDIVIDUAIS (MODAL)
+        function atualizarControlesRodape(totalItens) {
+            const totalPaginas = Math.ceil(totalItens / itensPorPagina) || 1;
+            
+            document.getElementById('infoPaginacao').innerText = `Exibindo de ${Math.min(totalItens, (paginaAtual-1)*itensPorPagina+1)} a ${Math.min(totalItens, paginaAtual*itensPorPagina)} de ${totalItens} atletas`;
+            
+            document.getElementById('btnAnterior').disabled = paginaAtual === 1;
+            document.getElementById('btnProximo').disabled = paginaAtual === totalPaginas;
+
+            const boxNumeros = document.getElementById('botoesNumerados');
+            boxNumeros.innerHTML = "";
+
+            for(let i=1; i<=totalPaginas; i++) {
+                const ativo = i === paginaAtual;
+                boxNumeros.innerHTML += `
+                    <button onclick="mudarPagina(${i})" class="px-2.5 py-1 rounded-md text-xs font-bold cursor-pointer transition ${ativo ? 'bg-orange-600 text-white' : 'border border-slate-200 bg-white hover:bg-slate-50 text-slate-600'}">${i}</button>
+                `;
+            }
+        }
+
+        function mudarPagina(num) { paginaAtual = num; renderizarListagemPaginada(); }
+        function paginaAnterior() { if(paginaAtual > 1) { paginaAtual--; renderizarListagemPaginada(); } }
+        function proximaPagina() { const totalPaginas = Math.ceil(dadosFiltrados.length / itensPorPagina); if(paginaAtual < totalPaginas) { paginaAtual++; renderizarListagemPaginada(); } }
+
+        // MUDANÇA CRUCIAL: Nova lógica de exclusão respeitando o histórico financeiro
+        async function excluirAluno(id, nome) {
+            if (confirm(`Tem certeza que deseja remover o(a) atleta "${nome}"? \nAs cobranças 'Pendentes' serão ocultadas, mas todo o histórico de pagamentos 'Pagos' continuará salvo nos relatórios financeiros.`)) {
+                
+                // 1. Desativa o Aluno mudando para true (boolean)
+                const { error: errorAluno } = await _supabase
+                    .from('alunos')
+                    .update({ "isDeleted": true })
+                    .eq('id', id);
+
+                if (errorAluno) {
+                    alert("Erro ao remover o cadastro do aluno: " + errorAluno.message);
+                    return;
+                }
+
+                // 2. Desativa APENAS as cobranças que ainda estão como 'Pendente'
+                const { error: errorPagamentos } = await _supabase
+                    .from('pagamentos')
+                    .update({ "isDeleted": true })
+                    .eq('aluno_id', id)
+                    .eq('status', 'Pendente'); // <-- Isso garante que o histórico de pagamentos 'Pago' não mude!
+
+                if (errorPagamentos) {
+                    alert("Aluno removido, mas houve um erro ao ocultar os boletos pendentes: " + errorPagamentos.message);
+                } else {
+                    alert("Atleta removido com sucesso! Histórico financeiro preservado.");
+                }
+
+                await baixarDadosSupabase();
+            }
+        }
+
+        // AJUSTE ISDELETED: Mostra o histórico individual ignorando parcelas deletadas
         async function verSituacao(alunoId) {
+            const aluno = dadosAlunosGlobais.find(a => a.id === alunoId);
+            if (!aluno) return;
+
+            document.getElementById('modalNome').innerText = aluno.nome;
+            document.getElementById('modalInfoCadastro').innerText = `Modalidade: ${aluno.modalidade} | Cadastrado em: ${aluno.data_cadastro ? new Date(aluno.data_cadastro).toLocaleDateString('pt-BR') : '--'}`;
+
+            const { data: historico, error } = await _supabase
+                .from('pagamentos')
+                .select('*')
+                .eq('aluno_id', alunoId)
+                .eq('isDeleted', false) // Oculta as parcelas deletadas do histórico individual do modal
+                .order('id', { ascending: false });
+
+            if (error) {
+                alert("Erro ao extrair histórico: " + error.message);
+                return;
+            }
+
+            const pagas = historico.filter(p => p.status === 'Pago').length;
+            const pendentes = historico.filter(p => p.status === 'Pendente').length;
+
+            document.getElementById('modalQtdPagas').innerText = pagas;
+            document.getElementById('modalQtdAberto').innerText = pendentes;
+
             const tModal = document.getElementById('modalTabelaDesktop');
             const cModal = document.getElementById('modalCardsMobile');
             tModal.innerHTML = "";
             cModal.innerHTML = "";
 
-            // Busca o aluno específico
-            const { data: aluno, errorA } = await _supabase.from('alunos').select('*').eq('id', alunoId).single();
-            if (errorA || !aluno) return;
-
-            document.getElementById('modalNome').innerText = aluno.nome;
-            document.getElementById('modalInfoCadastro').innerText = `Cadastro: ${aluno.data_cadastro} | ${aluno.email}`;
-
-            // Busca os pagamentos vinculados a esse aluno
-            const { data: parcelas, errorP } = await _supabase.from('pagamentos').select('*').eq('aluno_id', alunoId).order('id', {ascending: false});
-            if (errorP) return;
-
-            let pagas = 0, abertas = 0;
-            const hoje = new Date();
-
-            parcelas.forEach(m => {
-                let badge = "";
-                if (m.status === "Pago") {
-                    pagas++;
-                    badge = `<span class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded text-[10px] font-bold">Pago ${m.data_baixa} (${m.forma_pagamento})</span>`;
-                } else {
-                    abertas++;
-                    const [dia, mes, ano] = m.vencimento.split('/');
-                    if (new Date(ano, mes - 1, dia) < hoje) {
-                        badge = `<span class="bg-rose-100 text-rose-800 px-2 py-0.5 rounded text-[10px] font-bold">🔴 Vencida</span>`;
-                    } else {
-                        badge = `<span class="bg-amber-100 text-amber-800 px-2 py-0.5 rounded text-[10px] font-bold">🟡 A Vencer</span>`;
-                    }
-                }
-
-                // PC
+            historico.forEach(h => {
+                const corStatus = h.status === 'Pago' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800';
+                
                 tModal.innerHTML += `
-                    <tr>
-                        <td class="p-3 font-semibold">${m.mes}</td>
-                        <td class="p-3 text-slate-500">${m.vencimento}</td>
-                        <td class="p-3 font-bold">R$ ${parseFloat(m.valor).toFixed(2)}</td>
-                        <td class="p-3">${badge}</td>
+                    <tr class="hover:bg-slate-50">
+                        <td class="p-3 font-semibold text-slate-700">${h.mes}</td>
+                        <td class="p-3 text-slate-500">${h.vencimento}</td>
+                        <td class="p-3 font-bold text-slate-800">R$ ${parseFloat(h.valor).toFixed(2)}</td>
+                        <td class="p-3"><span class="${corStatus} px-2 py-0.5 rounded text-[10px] font-bold uppercase">${h.status}</span></td>
                     </tr>
                 `;
 
-                // Mobile
                 cModal.innerHTML += `
-                    <div class="bg-slate-100 p-3 rounded-xl flex justify-between items-center text-xs">
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 flex justify-between items-center text-xs">
                         <div>
-                            <div class="font-bold text-slate-800">Mês: ${m.mes}</div>
-                            <div class="text-[11px] text-slate-500 mt-0.5">Vence: ${m.vencimento}</div>
+                            <p class="font-bold text-slate-800">Ref: ${h.mes}</p>
+                            <p class="text-slate-500 mt-0.5">Venc: ${h.vencimento}</p>
                         </div>
-                        <div class="text-right space-y-1">
-                            <div class="font-black text-slate-900">R$ ${parseFloat(m.valor).toFixed(2)}</div>
-                            <div>${badge}</div>
+                        <div class="text-right">
+                            <p class="font-black text-slate-900">R$ ${parseFloat(h.valor).toFixed(2)}</p>
+                            <span class="${corStatus} px-2 py-0.5 rounded text-[9px] font-bold uppercase block mt-1 text-center">${h.status}</span>
                         </div>
                     </div>
                 `;
             });
 
-            document.getElementById('modalQtdPagas').innerText = pagas;
-            document.getElementById('modalQtdAberto').innerText = abertas;
             document.getElementById('modalAluno').classList.remove('hidden');
         }
 
         function fecharModal() { document.getElementById('modalAluno').classList.add('hidden'); }
 
-        // EXCLUIR ATLETA
-        async function excluirAluno(id) {
-            if (confirm("Excluir permanentemente este atleta e todo seu histórico financeiro?")) {
-                const { error } = await _supabase.from('alunos').delete().eq('id', id);
+        function configurarFormulario() {
+            document.getElementById('alunoForm').onsubmit = async function(e) {
+                e.preventDefault();
+
+                const novoAluno = {
+                    nome: document.getElementById('nome').value,
+                    whatsapp: document.getElementById('whatsapp').value,
+                    email: document.getElementById('email').value,
+                    modalidade: document.getElementById('modalidade').value,
+                    valor: parseFloat(document.getElementById('valor').value),
+                    "isDeleted": false // Garante que novos alunos comecem ativos como false (boolean)
+                };
+
+                const { data, error } = await _supabase
+                    .from('alunos')
+                    .insert([novoAluno])
+                    .select();
+
                 if (error) {
-                    alert("Erro ao excluir: " + error.message);
-                } else {
-                    alert("Atleta removido!");
-                    await listarAlunos();
+                    alert("Erro ao cadastrar: " + error.message);
+                    return;
                 }
+
+                if (data && data.length > 0) {
+                    const criado = data[0];
+                    const hoje = new Date();
+                    const mesStr = String(hoje.getMonth() + 1).padStart(2, '0') + '/' + hoje.getFullYear();
+                    const vencimentoStr = String(hoje.getDate()).padStart(2, '0') + '/' + mesStr;
+
+                    const primeiraMensalidade = {
+                        aluno_id: criado.id,
+                        mes: mesStr,
+                        vencimento: vencimentoStr,
+                        status: 'Pendente',
+                        valor: criado.valor,
+                        "isDeleted": false // Inicia ativo (false)
+                    };
+
+                    await _supabase.from('pagamentos').insert([primeiraMensalidade]);
+                }
+
+                alert("Atleta cadastrado e primeira mensalidade gerada!");
+                document.getElementById('alunoForm').reset();
+                await baixarDadosSupabase();
             }
         }
 

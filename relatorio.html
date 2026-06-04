@@ -27,58 +27,134 @@
     </aside>
 
     <main class="flex-1 p-4 sm:p-6 lg:p-10 space-y-6">
-        <header>
-            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-800">Fluxo de Caixa</h2>
-            <p class="text-xs sm:text-sm text-slate-500">Histórico detalhado das receitas recebidas.</p>
+        <header class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-800">Fluxo de Caixa</h2>
+                <p class="text-xs sm:text-sm text-slate-500">Histórico detalhado baseado no dia real do recebimento.</p>
+            </div>
+            <div class="flex items-center gap-2">
+                <select id="filtroMesAno" onchange="carregarRelatorio()" class="bg-white border border-slate-300 rounded-xl px-3 py-2 text-sm font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-orange-500">
+                </select>
+            </div>
         </header>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
-                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">🏐 Vôlei de Praia</p>
-                <p id="caixaVolei" class="text-2xl font-black text-slate-800 mt-1">R$ 0,00</p>
-            </div>
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
-                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">🎾 Beach Tennis</p>
-                <p id="caixaBeach" class="text-2xl font-black text-slate-800 mt-1">R$ 0,00</p>
-            </div>
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
-                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">⚽ Futevôlei</p>
-                <p id="caixaFutevolei" class="text-2xl font-black text-slate-800 mt-1">R$ 0,00</p>
-            </div>
-        </div>
-
-        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-            <div class="p-4 bg-slate-50 border-b font-bold text-slate-800 text-sm">Entradas Registradas</div>
+        <div class="space-y-6">
             
-            <div class="hidden md:block w-full overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="bg-slate-100 text-slate-600 text-xs uppercase font-bold border-b">
-                            <th class="p-4">Atleta</th>
-                            <th class="p-4">Modalidade</th>
-                            <th class="p-4">Mês Ref.</th>
-                            <th class="p-4">Data Pagto</th>
-                            <th class="p-4">Método</th>
-                            <th class="p-4">Valor</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabelaCaixaDesktop" class="text-sm divide-y text-slate-700"></tbody>
-                </table>
+            <!-- Bloco de Somatórios -->
+            <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                <div class="bg-orange-500 p-5 rounded-2xl shadow-md border border-orange-600 text-white">
+                    <p class="text-xs font-bold uppercase tracking-wider opacity-90">💰 Total Geral Recebido</p>
+                    <p id="caixaTotalGeral" class="text-2xl font-black mt-1">R$ 0,00</p>
+                </div>
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">🏐 Vôlei de Praia</p>
+                    <p id="caixaVolei" class="text-2xl font-black text-slate-800 mt-1">R$ 0,00</p>
+                </div>
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">🎾 Beach Tennis</p>
+                    <p id="caixaBeach" class="text-2xl font-black text-slate-800 mt-1">R$ 0,00</p>
+                </div>
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">⚽ Futevôlei</p>
+                    <p id="caixaFutevolei" class="text-2xl font-black text-slate-800 mt-1">R$ 0,00</p>
+                </div>
             </div>
 
-            <div id="listaCaixaMobile" class="block md:hidden p-4 space-y-4 bg-slate-50/50"></div>
-            <div id="msgSemDados" class="p-8 text-center text-slate-500 font-medium hidden">Nenhum recebimento registrado até o momento.</div>
-        </section>
+            <!-- Tabela com a listagem de pagamentos -->
+            <section class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div id="tituloListaEntradas" class="p-4 bg-slate-50 border-b border-slate-200 font-bold text-slate-800 text-sm">Entradas Registradas</div>
+                
+                <div class="hidden md:block w-full overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-600 text-xs uppercase font-bold border-b border-slate-200">
+                                <th class="p-4">Atleta</th>
+                                <th class="p-4">Modalidade</th>
+                                <th class="p-4">Mês Ref.</th>
+                                <th class="p-4">Data Pagto</th>
+                                <th class="p-4">Método</th>
+                                <th class="p-4">Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaCaixaDesktop" class="text-sm divide-y divide-slate-200 text-slate-700"></tbody>
+                    </table>
+                </div>
+
+                <div id="listaCaixaMobile" class="block md:hidden p-4 space-y-4 bg-slate-50/50"></div>
+                <div id="msgSemDados" class="p-8 text-center text-slate-500 font-medium hidden">Nenhum recebimento registrado neste mês.</div>
+            </section>
+        </div>
     </main>
 
     <script>
+        let todosPagosGlobais = [];
+
         window.onload = function() {
             if (verificarSessao()) {
-                carregarRelatorio();
+                inicializarFiltroMeses();
+                baixarHistoricoCompleto();
             }
         }
 
-        async function carregarRelatorio() {
+        function verificarSessao() {
+            const sessao = localStorage.getItem('arena_session');
+            if (!sessao) {
+                window.location.href = 'index.html';
+                return false;
+            }
+            return true;
+        }
+
+        function inicializarFiltroMeses() {
+            const seletor = document.getElementById('filtroMesAno');
+            const dataHoje = new Date();
+            
+            for (let i = 0; i < 12; i++) {
+                let m = dataHoje.getMonth() - i + 1; 
+                let a = dataHoje.getFullYear();
+                
+                if (m <= 0) {
+                    m += 12;
+                    a -= 1;
+                }
+                
+                const mesStr = String(m).padStart(2, '0');
+                const chaveCompetencia = `${mesStr}/${a}`;
+
+                const dataAux = new Date(a, m - 1, 1);
+                const nomeMes = dataAux.toLocaleString('pt-BR', { month: 'long' });
+                const textoOpcao = `${nomeMes.charAt(0).toUpperCase() + nomeMes.slice(1)} de ${a}`;
+
+                const opt = document.createElement('option');
+                opt.value = chaveCompetencia;
+                opt.innerText = textoOpcao;
+                seletor.appendChild(opt);
+            }
+        }
+
+        async function baixarHistoricoCompleto() {
+            // AJUSTE CRUCIAL AQUI: .eq('isDeleted', 0) garante que boletos marcados como excluídos (1) sejam ignorados pelo caixa
+            const { data: pagos, error } = await _supabase
+                .from('pagamentos')
+                .select(`
+                    mes, valor, data_baixa, forma_pagamento, isDeleted,
+                    alunos ( nome, modalidade )
+                `)
+                .eq('status', 'Pago')
+                .eq('isDeleted', 0); // Filtra apenas registros ativos
+
+            if (error) {
+                alert("Erro ao extrair movimentações: " + error.message);
+                return;
+            }
+
+            todosPagosGlobais = pagos || [];
+            carregarRelatorio();
+        }
+
+        function carregarRelatorio() {
+            const mesSelecionado = document.getElementById('filtroMesAno').value;
+            
             const tDesktop = document.getElementById('tabelaCaixaDesktop');
             const lMobile = document.getElementById('listaCaixaMobile');
             const msg = document.getElementById('msgSemDados');
@@ -89,64 +165,68 @@
 
             let totalVolei = 0, totalBeach = 0, totalFutevolei = 0;
 
-            // Puxa todos os pagamentos com status "Pago" vinculando a modalidade do Aluno
-            const { data: pagos, error } = await _supabase
-                .from('pagamentos')
-                .select(`
-                    mes, valor, data_baixa, forma_pagamento,
-                    alunos ( nome, modalidade )
-                `)
-                .eq('status', 'Pago');
+            const filtradosNoMes = todosPagosGlobais.filter(p => {
+                if (!p.data_baixa) return false;
+                
+                const partes = p.data_baixa.split('/'); 
+                if (partes.length < 3) return false;
+                
+                const mesBaixa = partes[1]; 
+                const anoBaixa = partes[2]; 
+                const competenciaBaixa = `${mesBaixa}/${anoBaixa}`;
+                
+                return competenciaBaixa === mesSelecionado;
+            });
 
-            if (error) {
-                alert("Erro ao processar relatório: " + error.message);
-                return;
-            }
+            document.getElementById('tituloListaEntradas').innerText = `Entradas Recebidas em — ${mesSelecionado}`;
 
-            if (!pagos || pagos.length === 0) {
+            if (filtradosNoMes.length === 0) {
                 msg.classList.remove('hidden');
+                document.getElementById('caixaTotalGeral').innerText = "R$ 0,00";
+                document.getElementById('caixaVolei').innerText = "R$ 0,00";
+                document.getElementById('caixaBeach').innerText = "R$ 0,00";
+                document.getElementById('caixaFutevolei').innerText = "R$ 0,00";
                 return;
             }
 
-            pagos.forEach(p => {
+            filtradosNoMes.forEach(p => {
                 const nome = p.alunos ? p.alunos.nome : "Desconhecido";
                 const mod = p.alunos ? p.alunos.modalidade : "Desconhecida";
                 const valorNum = parseFloat(p.valor);
 
-                // Somatórios por categoria
                 if (mod === "Vôlei de Praia") totalVolei += valorNum;
                 else if (mod === "Beach Tennis") totalBeach += valorNum;
                 else if (mod === "Futevôlei") totalFutevolei += valorNum;
 
-                // Render Desktop
                 tDesktop.innerHTML += `
-                    <tr class="hover:bg-slate-50">
+                    <tr class="hover:bg-slate-50 transition-colors">
                         <td class="p-4 font-bold text-slate-800">${nome}</td>
                         <td class="p-4"><span class="bg-orange-100 text-orange-700 px-2 py-0.5 rounded text-xs font-bold">${mod}</span></td>
                         <td class="p-4 text-slate-600 font-medium">${p.mes}</td>
-                        <td class="p-4 text-slate-500">${p.data_baixa || '--'}</td>
+                        <td class="p-4 text-slate-500 font-bold">${p.data_baixa || '--'}</td>
                         <td class="p-4 text-slate-500">${p.forma_pagamento || '--'}</td>
-                        <td class="p-4 font-black text-emerald-600">R$ ${valorNum.toFixed(2)}</td>
+                        <td class="p-4 font-black text-emerald-600 font-mono">R$ ${valorNum.toFixed(2)}</td>
                     </tr>
                 `;
 
-                // Render Mobile
                 lMobile.innerHTML += `
                     <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col space-y-2">
                         <div class="flex justify-between items-center">
                             <h4 class="font-extrabold text-slate-800 text-sm leading-tight">${nome}</h4>
-                            <span class="text-emerald-600 font-black text-sm">R$ ${valorNum.toFixed(2)}</span>
+                            <span class="text-emerald-600 font-black text-sm font-mono">R$ ${valorNum.toFixed(2)}</span>
                         </div>
                         <div class="grid grid-cols-3 gap-1 text-[11px] font-medium bg-slate-50 p-2 rounded-lg text-slate-600">
                             <div><span class="text-slate-400 block font-normal">Esporte:</span>${mod}</div>
-                            <div><span class="text-slate-400 block font-normal">Data:</span>${p.data_baixa || '--'}</div>
-                            <div class="text-right"><span class="text-slate-400 block font-normal">Método:</span>${p.forma_pagamento || '--'}</div>
+                            <div><span class="text-slate-400 block font-normal">Pago em:</span>${p.data_baixa || '--'}</div>
+                            <div class="text-right"><span class="text-slate-400 block font-normal">Ref:</span>${p.mes}</div>
                         </div>
                     </div>
                 `;
             });
 
-            // Atualiza os painéis de somatório no topo da tela
+            const totalGeralDoMes = totalVolei + totalBeach + totalFutevolei;
+
+            document.getElementById('caixaTotalGeral').innerText = `R$ ${totalGeralDoMes.toFixed(2)}`;
             document.getElementById('caixaVolei').innerText = `R$ ${totalVolei.toFixed(2)}`;
             document.getElementById('caixaBeach').innerText = `R$ ${totalBeach.toFixed(2)}`;
             document.getElementById('caixaFutevolei').innerText = `R$ ${totalFutevolei.toFixed(2)}`;

@@ -10,7 +10,6 @@
 </head>
 <body class="bg-slate-100 flex flex-col lg:flex-row min-h-screen font-sans">
 
-    <!-- BARRA LATERAL DE NAVEGAÇÃO -->
     <aside class="w-full lg:w-64 bg-slate-900 text-white p-4 lg:p-6 flex flex-col justify-between shadow-md sticky top-0 z-40">
         <div class="flex lg:flex-col justify-between items-center lg:items-stretch w-full">
             <div class="text-center lg:mb-8 lg:border-b lg:border-slate-700 lg:pb-4">
@@ -27,75 +26,44 @@
         </div>
     </aside>
 
-    <!-- CONTEÚDO PRINCIPAL -->
     <main class="flex-1 p-4 sm:p-6 lg:p-10 space-y-6">
         <header>
             <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-800">Mensalidades Pendentes</h2>
-            <p class="text-xs sm:text-sm text-slate-500">Monitore os débitos em aberto, altere valores com descontos e registre os recebimentos.</p>
+            <p class="text-xs sm:text-sm text-slate-500">Monitore os débitos em aberto e registre os recebimentos.</p>
         </header>
 
-        <!-- SEÇÃO DA TABELA / CARDS -->
-        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-            <!-- Visualização Desktop -->
-            <div class="hidden md:block w-full overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="bg-slate-50 text-slate-600 text-xs uppercase font-bold border-b">
-                            <th class="p-4">Atleta</th>
-                            <th class="p-4">Modalidade</th>
-                            <th class="p-4">Mês Ref.</th>
-                            <th class="p-4">Vencimento</th>
-                            <th class="p-4">Valor Original</th>
-                            <th class="p-4 text-center">Ação</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabelaPendentesDesktop" class="text-sm divide-y text-slate-700"></tbody>
-                </table>
-            </div>
-            
-            <!-- Visualização Mobile -->
-            <div id="listaPendentesMobile" class="block md:hidden p-4 space-y-4 bg-slate-50/50"></div>
-            
-            <!-- Mensagem Amigável se o Caixa estiver em dia -->
-            <div id="msgSemPendencias" class="p-8 text-center text-slate-500 font-medium hidden">🎉 Nenhuma mensalidade pendente encontrada!</div>
-        </section>
+        <div id="containerMesesGeral" class="space-y-8"></div>
+        
+        <div id="msgSemPendencias" class="p-8 text-center text-slate-500 font-medium hidden">🎉 Nenhuma mensalidade pendente encontrada!</div>
 
-        <!-- MODAL AVANÇADO PARA DAR BAIXA (SUPORTA DESCONTOS) -->
         <div id="modalBaixa" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50">
-            <div class="bg-white p-6 rounded-2xl shadow-xl w-full max-w-sm mx-auto">
-                <h3 class="text-lg font-bold text-slate-800 mb-1">💰 Confirmar Recebimento</h3>
-                <p class="text-xs text-slate-500 mb-4">Ajuste o valor se houver descontos e selecione a forma de pagamento.</p>
-                
-                <!-- Campos ocultos de controle interno -->
+            <div class="bg-white p-6 rounded-2xl shadow-xl w-full max-w-sm">
+                <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">💰 Confirmar Recebimento</h3>
                 <input type="hidden" id="atualPagamentoId">
                 <input type="hidden" id="atualAlunoId">
+                <input type="hidden" id="atualMes">
+                <input type="hidden" id="atualVencimento">
+                <input type="hidden" id="atualValor">
                 
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Valor Recebido (R$)</label>
-                        <input type="number" step="0.01" id="valorFinalComDesconto" class="w-full px-3 py-2 border rounded-lg bg-slate-50 text-sm font-bold focus:ring-2 focus:ring-orange-500 focus:outline-none">
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Forma de Pagamento</label>
-                        <select id="formaPagamento" class="w-full px-3 py-2 border rounded-lg bg-slate-50 text-sm focus:outline-none">
-                            <option value="Pix">📱 Pix</option>
-                            <option value="Dinheiro">💵 Dinheiro</option>
-                            <option value="Cartão de Crédito">💳 Cartão de Crédito</option>
-                            <option value="Cartão de Débito">💳 Cartão de Débito</option>
+                        <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Forma de Pagamento</label>
+                        <select id="formaPagamento" class="w-full px-3 py-2 border rounded-lg bg-slate-50 focus:outline-none">
+                            <option value="Dinheiro">Dinheiro</option>
+                            <option value="Pix">Pix</option>
+                            <option value="Cartão de Crédito">Cartão de Crédito</option>
+                            <option value="Cartão de Débito">Cartão de Débito</option>
                         </select>
                     </div>
-                </div>
-
-                <div class="flex space-x-3 mt-6">
-                    <button onclick="fecharModalBaixa()" class="flex-1 border text-sm py-2 rounded-lg text-slate-600 font-semibold hover:bg-slate-100 transition cursor-pointer">Cancelar</button>
-                    <button onclick="confirmarBaixa()" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white text-sm py-2 rounded-lg font-bold transition cursor-pointer">Confirmar</button>
+                    <div class="flex gap-2 pt-2">
+                        <button onclick="confirmarBaixa()" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-lg transition cursor-pointer">Confirmar</button>
+                        <button onclick="fecharModalBaixa()" class="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 rounded-lg transition cursor-pointer">Cancelar</button>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- INÍCIO DA LÓGICA JAVASCRIPT INTEGRADA -->
     <script>
         window.onload = function() {
             if (verificarSessao()) {
@@ -103,24 +71,38 @@
             }
         }
 
-        // Função responsável por listar todas as pendências em aberto
+        function verificarSessao() {
+            const sessao = localStorage.getItem('arena_session');
+            if (!sessao) {
+                window.location.href = 'index.html';
+                return false;
+            }
+            return true;
+        }
+
+        function obterNomeMesExtenso(mesAnoStr) {
+            const [mes, ano] = mesAnoStr.split('/');
+            const data = new Date(ano, parseInt(mes, 10) - 1, 1);
+            const nomeMes = data.toLocaleString('pt-BR', { month: 'long' });
+            return nomeMes.charAt(0).toUpperCase() + nomeMes.slice(1) + " de " + ano;
+        }
+
         async function carregarPendentes() {
-            const tDesktop = document.getElementById('tabelaPendentesDesktop');
-            const lMobile = document.getElementById('listaPendentesMobile');
+            const containerGeral = document.getElementById('containerMesesGeral');
             const msg = document.getElementById('msgSemPendencias');
 
-            tDesktop.innerHTML = "";
-            lMobile.innerHTML = "";
+            containerGeral.innerHTML = "";
             msg.classList.add('hidden');
 
-            // Busca os pagamentos com status 'Pendente' puxando a relação de ID, Nome e Modalidade do Aluno
+            // AJUSTE ISDELETED: Filtra apenas pagamentos com status 'Pendente' e isDeleted = 0
             const { data: pendentes, error } = await _supabase
                 .from('pagamentos')
                 .select(`
-                    id, alunoId, mes, vencimento, valor, status,
+                    id, mes, vencimento, valor, status, aluno_id, isDeleted,
                     alunos ( nome, modalidade )
                 `)
-                .eq('status', 'Pendente');
+                .eq('status', 'Pendente')
+                .eq('isDeleted', 0); // Ignora parcelas deletadas logicamente
 
             if (error) {
                 alert("Erro ao carregar pendências: " + error.message);
@@ -132,50 +114,129 @@
                 return;
             }
 
-            // Renderiza os registros encontrados nas tabelas
+            const gruposPorMes = {};
+
             pendentes.forEach(p => {
-                const alunoNome = p.alunos ? p.alunos.nome : "Desconhecido";
-                const modalidade = p.alunos ? p.alunos.modalidade : "Não informada";
-                const valorOriginal = parseFloat(p.valor);
+                if (!gruposPorMes[p.mes]) {
+                    gruposPorMes[p.mes] = [];
+                }
+                gruposPorMes[p.mes].push(p);
+            });
 
-                // Injeção de HTML na Tabela Desktop
-                tDesktop.innerHTML += `
-                    <tr class="hover:bg-slate-50">
-                        <td class="p-4 font-bold text-slate-800">${alunoNome}</td>
-                        <td class="p-4"><span class="bg-orange-100 text-orange-700 px-2 py-0.5 rounded text-xs font-bold">${modalidade}</span></td>
-                        <td class="p-4 font-medium text-slate-600">${p.mes}</td>
-                        <td class="p-4 text-slate-500">${p.vencimento}</td>
-                        <td class="p-4 font-black text-slate-900">R$ ${valorOriginal.toFixed(2)}</td>
-                        <td class="p-4 text-center">
-                            <button onclick="abrirModalBaixa(${p.id}, ${p.alunoId}, ${valorOriginal})" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-1.5 rounded-lg font-bold transition cursor-pointer">✓ Dar Baixa</button>
-                        </td>
-                    </tr>
-                `;
+            const mesesOrdenados = Object.keys(gruposPorMes).sort((a, b) => {
+                const [mesA, anoA] = a.split('/').map(Number);
+                const [mesB, anoB] = b.split('/').map(Number);
+                return anoA !== anoB ? anoA - anoB : mesA - mesB;
+            });
 
-                // Injeção de HTML na Estrutura em Cards Mobile
-                lMobile.innerHTML += `
-                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col space-y-3">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <h4 class="font-extrabold text-slate-800 text-base leading-tight">${alunoNome}</h4>
-                                <p class="text-xs text-slate-500 mt-0.5">Vencimento: ${p.vencimento} (Ref: ${p.mes})</p>
+            const hoje = new Date();
+            hoje.setHours(0, 0, 0, 0);
+
+            mesesOrdenados.forEach(mesChave => {
+                const listaPagamentosDoMes = gruposPorMes[mesChave];
+                const tituloMesExtenso = obterNomeMesExtenso(mesChave);
+                const secaoMesId = `secao-${mesChave.replace('/', '-')}`;
+                
+                let htmlBlocoMes = `
+                    <div id="${secaoMesId}" class="space-y-3">
+                        <div class="flex items-center gap-2 pt-2">
+                            <span class="text-xs font-bold tracking-wider uppercase text-orange-600 bg-orange-50 px-2.5 py-1 rounded-md border border-orange-200/60">${tituloMesExtenso}</span>
+                            <div class="h-[1px] bg-slate-200 flex-1"></div>
+                        </div>
+
+                        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                            <div class="hidden md:block w-full overflow-x-auto">
+                                <table class="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr class="bg-slate-50 text-slate-600 text-xs uppercase font-bold border-b">
+                                            <th class="p-4">Atleta</th>
+                                            <th class="p-4">Modalidade</th>
+                                            <th class="p-4">Mês Ref.</th>
+                                            <th class="p-4">Vencimento</th>
+                                            <th class="p-4">Alerta</th>
+                                            <th class="p-4">Valor</th>
+                                            <th class="p-4 text-center">Ação</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tabelaDesktop-${secaoMesId}" class="text-sm divide-y text-slate-700"></tbody>
+                                </table>
                             </div>
-                            <span class="text-[10px] font-bold bg-orange-100 text-orange-700 px-2 py-0.5 rounded">${modalidade}</span>
-                        </div>
-                        <div class="flex items-center justify-between pt-2 border-t border-slate-100">
-                            <div class="font-black text-slate-900 text-base">R$ ${valorOriginal.toFixed(2)}</div>
-                            <button onclick="abrirModalBaixa(${p.id}, ${p.alunoId}, ${valorOriginal})" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs py-2 px-4 rounded-xl font-bold transition cursor-pointer">✓ Dar Baixa</button>
-                        </div>
+                            <div id="listaMobile-${secaoMesId}" class="block md:hidden p-4 space-y-4 bg-slate-50/50"></div>
+                        </section>
                     </div>
                 `;
+
+                containerGeral.insertAdjacentHTML('beforeend', htmlBlocoMes);
+
+                const tDesktop = document.getElementById(`tabelaDesktop-${secaoMesId}`);
+                const lMobile = document.getElementById(`listaMobile-${secaoMesId}`);
+
+                listaPagamentosDoMes.forEach(p => {
+                    const alunoNome = p.alunos ? p.alunos.nome : "Desconhecido";
+                    const modalidade = p.alunos ? p.alunos.modalidade : "Não informada";
+
+                    const [dia, mes, ano] = p.vencimento.split('/').map(Number);
+                    const dataVencimento = new Date(ano, mes - 1, dia);
+                    dataVencimento.setHours(0, 0, 0, 0);
+
+                    let badgeAlerta = "";
+                    let corLinhaDesktop = "hover:bg-slate-50/80";
+                    let corCardMobile = "bg-white border-slate-200";
+
+                    if (dataVencimento < hoje) {
+                        badgeAlerta = `<span class="bg-rose-100 text-rose-700 px-2 py-0.5 rounded text-[11px] font-bold">🔴 Vencido</span>`;
+                        corLinhaDesktop = "bg-rose-50/60 hover:bg-rose-50"; 
+                        corCardMobile = "bg-rose-50/40 border-rose-200 shadow-rose-100/50";
+                    } else if (dataVencimento.getTime() === hoje.getTime()) {
+                        badgeAlerta = `<span class="bg-amber-100 text-amber-800 px-2 py-0.5 rounded text-[11px] font-bold">🟡 Vence Hoje</span>`;
+                        corLinhaDesktop = "bg-amber-50/50 hover:bg-amber-50";
+                        corCardMobile = "bg-amber-50/30 border-amber-200";
+                    } else {
+                        badgeAlerta = `<span class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded text-[11px] font-bold">🟢 No Prazo</span>`;
+                    }
+
+                    tDesktop.innerHTML += `
+                        <tr class="${corLinhaDesktop} transition-colors">
+                            <td class="p-4 font-bold text-slate-800">${alunoNome}</td>
+                            <td class="p-4"><span class="bg-orange-100 text-orange-700 px-2 py-0.5 rounded text-xs font-bold">${modalidade}</span></td>
+                            <td class="p-4 font-medium text-slate-600">${p.mes}</td>
+                            <td class="p-4 text-slate-500">${p.vencimento}</td>
+                            <td class="p-4">${badgeAlerta}</td>
+                            <td class="p-4 font-black text-slate-900">R$ ${parseFloat(p.valor).toFixed(2)}</td>
+                            <td class="p-4 text-center">
+                                <button onclick="abrirModalBaixa(${p.id}, ${p.aluno_id}, '${p.mes}', '${p.vencimento}', ${p.valor})" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-1.5 rounded-lg font-bold transition cursor-pointer">✓ Dar Baixa</button>
+                            </td>
+                        </tr>
+                    `;
+
+                    lMobile.innerHTML += `
+                        <div class="${corCardMobile} p-4 rounded-xl border shadow-sm flex flex-col space-y-3 transition-colors">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="font-extrabold text-slate-800 text-base leading-tight">${alunoNome}</h4>
+                                    <p class="text-xs text-slate-500 mt-0.5">Vencimento: ${p.vencimento} (Ref: ${p.mes})</p>
+                                </div>
+                                <div class="flex flex-col items-end gap-1">
+                                    <span class="text-[10px] font-bold bg-orange-100 text-orange-700 px-2 py-0.5 rounded">${modalidade}</span>
+                                    ${badgeAlerta}
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between pt-2 border-t border-slate-100">
+                                <div class="font-black text-slate-900 text-base">R$ ${parseFloat(p.valor).toFixed(2)}</div>
+                                <button onclick="abrirModalBaixa(${p.id}, ${p.aluno_id}, '${p.mes}', '${p.vencimento}', ${p.valor})" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs py-2 px-4 rounded-xl font-bold transition cursor-pointer">✓ Dar Baixa</button>
+                            </div>
+                        </div>
+                    `;
+                });
             });
         }
 
-        // Exibe o modal injetando dinamicamente os valores corretos para edição
-        function abrirModalBaixa(pagamentoId, alunoId, valorOriginal) {
-            document.getElementById('atualPagamentoId').value = pagamentoId;
+        function abrirModalBaixa(id, alunoId, mes, vencimento, valor) {
+            document.getElementById('atualPagamentoId').value = id;
             document.getElementById('atualAlunoId').value = alunoId;
-            document.getElementById('valorFinalComDesconto').value = valorOriginal; // Exibe o valor padrão editável
+            document.getElementById('atualMes').value = mes;
+            document.getElementById('atualVencimento').value = vencimento;
+            document.getElementById('atualValor').value = valor;
             document.getElementById('modalBaixa').classList.remove('hidden');
         }
 
@@ -183,80 +244,67 @@
             document.getElementById('modalBaixa').classList.add('hidden');
         }
 
-        // Processa a baixa atualizando os dados e injetando a mensalidade futura
         async function confirmarBaixa() {
             const id = document.getElementById('atualPagamentoId').value;
             const alunoId = document.getElementById('atualAlunoId').value;
-            const valorPago = parseFloat(document.getElementById('valorFinalComDesconto').value);
+            const mesAtual = document.getElementById('atualMes').value;
+            const vencimentoAtual = document.getElementById('atualVencimento').value;
+            const valor = document.getElementById('atualValor').value;
+
             const forma = document.getElementById('formaPagamento').value;
-            
-            const hoje = new Date();
-            const dataBaixaFormatada = hoje.toLocaleDateString('pt-BR');
+            const hoje = new Date().toLocaleDateString('pt-BR');
 
-            if (isNaN(valorPago) || valorPago < 0) {
-                alert("Por favor, informe um valor de recebimento válido.");
-                return;
-            }
-
-            // 1. Atualiza o pagamento atual no banco de dados para o status "Pago"
-            const { data: pagamentoBaixado, error: erroBaixa } = await _supabase
+            const { error: errorBaixa } = await _supabase
                 .from('pagamentos')
                 .update({
                     status: 'Pago',
                     forma_pagamento: forma,
-                    data_baixa: dataBaixaFormatada,
-                    valor: valorPago // Registra o valor de fato recebido (com desconto ou acréscimo)
+                    data_baixa: hoje
                 })
-                .eq('id', id)
-                .select();
+                .eq('id', id);
 
-            if (erroBaixa) {
-                alert("Erro ao processar baixa de pagamento: " + erroBaixa.message);
+            if (errorBaixa) {
+                alert("Erro ao processar pagamento: " + errorBaixa.message);
                 return;
             }
 
-            // 2. Criação Inteligente da Nova Mensalidade do Próximo Mês
-            try {
-                const mesReferenciaAtual = pagamentoBaixado[0].mes; // Obtém no formato "MM/AAAA"
-                const [mesStr, anoStr] = mesReferenciaAtual.split('/');
-                const objetoData = new Date(parseInt(anoStr), parseInt(mesStr) - 1, 1);
-                
-                // Soma mais um mês na folha do calendário
-                objetoData.setMonth(objetoData.getMonth() + 1);
-                
-                const proximoMesRef = `${String(objetoData.getMonth() + 1).padStart(2, '0')}/${objetoData.getFullYear()}`;
+            const [strMes, strAno] = mesAtual.split('/');
+            let mesInt = parseInt(strMes, 10);
+            let anoInt = parseInt(strAno, 10);
 
-                // Puxa o valor padrão de cadastro do aluno para ser o preço base do próximo mês
-                const { data: dadosAluno } = await _supabase
-                    .from('alunos')
-                    .select('valor')
-                    .eq('id', alunoId)
-                    .single();
+            mesInt++;
+            if (mesInt > 12) {
+                mesInt = 1;
+                anoInt++;
+            }
 
-                const valorPadraoProximoMes = dadosAluno ? dadosAluno.valor : valorPago;
+            const proximoMesStr = `${String(mesInt).padStart(2, '0')}/${anoInt}`;
+            const diaVencimento = vencimentoAtual.split('/')[0];
+            const novoVencimentoStr = `${diaVencimento}/${proximoMesStr}`;
 
-                // Salva a nova cobrança pendente do mês que vem para o ciclo não romper
-                await _supabase
-                    .from('pagamentos')
-                    .insert([{
-                        alunoId: parseInt(alunoId),
-                        mes: proximoMesRef,
-                        vencimento: `10/${proximoMesRef}`,
-                        status: 'Pendente',
-                        valor: valorPadraoProximoMes
-                    }]);
+            const novoPagamentoAvançado = {
+                aluno_id: parseInt(alunoId, 10),
+                mes: proximoMesStr,
+                vencimento: novoVencimentoStr,
+                status: "Pendente",
+                valor: parseFloat(valor),
+                isDeleted: 0 // Garante que a próxima mensalidade gerada inicie ativa
+            };
 
-                alert("Recebimento gravado! Nova mensalidade de referência (" + proximoMesRef + ") adicionada.");
-            } catch (erroProximoMes) {
-                console.error("Erro na criação do mês seguinte:", erroProximoMes);
-                alert("Pagamento recebido, mas houve um erro interno de calendário ao calcular o mês seguinte.");
+            const { error: errorProximo } = await _supabase
+                .from('pagamentos')
+                .insert([novoPagamentoAvançado]);
+
+            if (errorProximo) {
+                alert("Pagamento atual baixado, mas houve um problema ao agendar a mensalidade seguinte: " + errorProximo.message);
+            } else {
+                alert("Pagamento baixado com sucesso e próxima mensalidade agendada!");
             }
 
             fecharModalBaixa();
             await carregarPendentes();
         }
 
-        // Destrói a sessão e envia para a tela de Login
         function logout() {
             localStorage.removeItem('arena_session');
             window.location.href = 'index.html';
