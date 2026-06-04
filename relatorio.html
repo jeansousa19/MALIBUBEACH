@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório de Caixa - Arena Sports Manager</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+</head>
+<body class="bg-slate-100 flex flex-col lg:flex-row min-h-screen font-sans">
+
+    <aside class="w-full lg:w-64 bg-slate-900 text-white p-4 lg:p-6 flex flex-col justify-between shadow-md sticky top-0 z-40">
+        <div class="flex lg:flex-col justify-between items-center lg:items-stretch w-full">
+            <div class="text-center lg:mb-8 lg:border-b lg:border-slate-700 lg:pb-4">
+                <h1 class="text-xl lg:text-2xl font-extrabold text-orange-500 tracking-wider">ARENA</h1>
+            </div>
+            <nav class="flex lg:flex-col gap-1 sm:gap-2">
+                <a href="dashboard.html" class="flex items-center space-x-1.5 text-slate-300 hover:bg-slate-800 px-3 py-2 rounded-xl font-medium text-xs sm:text-sm lg:text-base"><span>📊</span> <span>Painel</span></a>
+                <a href="alunos.html" class="flex items-center space-x-1.5 text-slate-300 hover:bg-slate-800 px-3 py-2 rounded-xl font-medium text-xs sm:text-sm lg:text-base"><span>👥</span> <span>Alunos</span></a>
+                <a href="relatorio.html" class="flex items-center space-x-1.5 bg-orange-600 text-white px-3 py-2 rounded-xl font-bold text-xs sm:text-sm lg:text-base"><span>📈</span> <span>Caixa</span></a>
+            </nav>
+            <div class="lg:pt-6 lg:border-t lg:border-slate-700 flex items-center">
+                <button onclick="logout()" class="text-xs lg:text-sm text-red-400 hover:text-red-300 font-bold flex items-center gap-1 cursor-pointer"><span>🚪</span> <span class="hidden lg:inline">Sair</span></button>
+            </div>
+        </div>
+    </aside>
+
+    <main class="flex-1 p-4 sm:p-6 lg:p-10 space-y-6">
+        <header>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-800">Fluxo de Caixa</h2>
+            <p class="text-xs sm:text-sm text-slate-500">Histórico detalhado das receitas recebidas.</p>
+        </header>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">🏐 Vôlei de Praia</p>
+                <p id="caixaVolei" class="text-2xl font-black text-slate-800 mt-1">R$ 0,00</p>
+            </div>
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">🎾 Beach Tennis</p>
+                <p id="caixaBeach" class="text-2xl font-black text-slate-800 mt-1">R$ 0,00</p>
+            </div>
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">⚽ Futevôlei</p>
+                <p id="caixaFutevolei" class="text-2xl font-black text-slate-800 mt-1">R$ 0,00</p>
+            </div>
+        </div>
+
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="p-4 bg-slate-50 border-b font-bold text-slate-800 text-sm">Entradas Registradas</div>
+            
+            <div class="hidden md:block w-full overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-100 text-slate-600 text-xs uppercase font-bold border-b">
+                            <th class="p-4">Atleta</th>
+                            <th class="p-4">Modalidade</th>
+                            <th class="p-4">Mês Ref.</th>
+                            <th class="p-4">Data Pagto</th>
+                            <th class="p-4">Método</th>
+                            <th class="p-4">Valor</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaCaixaDesktop" class="text-sm divide-y text-slate-700"></tbody>
+                </table>
+            </div>
+
+            <div id="listaCaixaMobile" class="block md:hidden p-4 space-y-4 bg-slate-50/50"></div>
+            <div id="msgSemDados" class="p-8 text-center text-slate-500 font-medium hidden">Nenhum recebimento registrado até o momento.</div>
+        </section>
+    </main>
+
+    <script>
+        window.onload = function() {
+            if (verificarSessao()) {
+                carregarRelatorio();
+            }
+        }
+
+        async function carregarRelatorio() {
+            const tDesktop = document.getElementById('tabelaCaixaDesktop');
+            const lMobile = document.getElementById('listaCaixaMobile');
+            const msg = document.getElementById('msgSemDados');
+
+            tDesktop.innerHTML = "";
+            lMobile.innerHTML = "";
+            msg.classList.add('hidden');
+
+            let totalVolei = 0, totalBeach = 0, totalFutevolei = 0;
+
+            // Puxa todos os pagamentos com status "Pago" vinculando a modalidade do Aluno
+            const { data: pagos, error } = await _supabase
+                .from('pagamentos')
+                .select(`
+                    mes, valor, data_baixa, forma_pagamento,
+                    alunos ( nome, modalidade )
+                `)
+                .eq('status', 'Pago');
+
+            if (error) {
+                alert("Erro ao processar relatório: " + error.message);
+                return;
+            }
+
+            if (!pagos || pagos.length === 0) {
+                msg.classList.remove('hidden');
+                return;
+            }
+
+            pagos.forEach(p => {
+                const nome = p.alunos ? p.alunos.nome : "Desconhecido";
+                const mod = p.alunos ? p.alunos.modalidade : "Desconhecida";
+                const valorNum = parseFloat(p.valor);
+
+                // Somatórios por categoria
+                if (mod === "Vôlei de Praia") totalVolei += valorNum;
+                else if (mod === "Beach Tennis") totalBeach += valorNum;
+                else if (mod === "Futevôlei") totalFutevolei += valorNum;
+
+                // Render Desktop
+                tDesktop.innerHTML += `
+                    <tr class="hover:bg-slate-50">
+                        <td class="p-4 font-bold text-slate-800">${nome}</td>
+                        <td class="p-4"><span class="bg-orange-100 text-orange-700 px-2 py-0.5 rounded text-xs font-bold">${mod}</span></td>
+                        <td class="p-4 text-slate-600 font-medium">${p.mes}</td>
+                        <td class="p-4 text-slate-500">${p.data_baixa || '--'}</td>
+                        <td class="p-4 text-slate-500">${p.forma_pagamento || '--'}</td>
+                        <td class="p-4 font-black text-emerald-600">R$ ${valorNum.toFixed(2)}</td>
+                    </tr>
+                `;
+
+                // Render Mobile
+                lMobile.innerHTML += `
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col space-y-2">
+                        <div class="flex justify-between items-center">
+                            <h4 class="font-extrabold text-slate-800 text-sm leading-tight">${nome}</h4>
+                            <span class="text-emerald-600 font-black text-sm">R$ ${valorNum.toFixed(2)}</span>
+                        </div>
+                        <div class="grid grid-cols-3 gap-1 text-[11px] font-medium bg-slate-50 p-2 rounded-lg text-slate-600">
+                            <div><span class="text-slate-400 block font-normal">Esporte:</span>${mod}</div>
+                            <div><span class="text-slate-400 block font-normal">Data:</span>${p.data_baixa || '--'}</div>
+                            <div class="text-right"><span class="text-slate-400 block font-normal">Método:</span>${p.forma_pagamento || '--'}</div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            // Atualiza os painéis de somatório no topo da tela
+            document.getElementById('caixaVolei').innerText = `R$ ${totalVolei.toFixed(2)}`;
+            document.getElementById('caixaBeach').innerText = `R$ ${totalBeach.toFixed(2)}`;
+            document.getElementById('caixaFutevolei').innerText = `R$ ${totalFutevolei.toFixed(2)}`;
+        }
+
+        function logout() {
+            localStorage.removeItem('arena_session');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

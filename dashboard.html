@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Arena Sports Manager</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+</head>
+<body class="bg-slate-100 flex flex-col lg:flex-row min-h-screen font-sans">
+
+    <aside class="w-full lg:w-64 bg-slate-900 text-white p-4 lg:p-6 flex flex-col justify-between shadow-md sticky top-0 z-40">
+        <div class="flex lg:flex-col justify-between items-center lg:items-stretch w-full">
+            <div class="text-center lg:mb-8 lg:border-b lg:border-slate-700 lg:pb-4">
+                <h1 class="text-xl lg:text-2xl font-extrabold text-orange-500 tracking-wider">ARENA</h1>
+            </div>
+            <nav class="flex lg:flex-col gap-1 sm:gap-2">
+                <a href="dashboard.html" class="flex items-center space-x-1.5 bg-orange-600 text-white px-3 py-2 rounded-xl font-bold text-xs sm:text-sm lg:text-base"><span>📊</span> <span>Painel</span></a>
+                <a href="alunos.html" class="flex items-center space-x-1.5 text-slate-300 hover:bg-slate-800 px-3 py-2 rounded-xl font-medium text-xs sm:text-sm lg:text-base"><span>👥</span> <span>Alunos</span></a>
+                <a href="relatorio.html" class="flex items-center space-x-1.5 text-slate-300 hover:bg-slate-800 px-3 py-2 rounded-xl font-medium text-xs sm:text-sm lg:text-base"><span>📈</span> <span>Caixa</span></a>
+            </nav>
+            <div class="lg:pt-6 lg:border-t lg:border-slate-700 flex items-center">
+                <button onclick="logout()" class="text-xs lg:text-sm text-red-400 hover:text-red-300 font-bold flex items-center gap-1 cursor-pointer"><span>🚪</span> <span class="hidden lg:inline">Sair</span></button>
+            </div>
+        </div>
+    </aside>
+
+    <main class="flex-1 p-4 sm:p-6 lg:p-10 space-y-6">
+        <header>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-800">Mensalidades Pendentes</h2>
+            <p class="text-xs sm:text-sm text-slate-500">Monitore os débitos em aberto e registre os recebimentos.</p>
+        </header>
+
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="hidden md:block w-full overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-50 text-slate-600 text-xs uppercase font-bold border-b">
+                            <th class="p-4">Atleta</th>
+                            <th class="p-4">Modalidade</th>
+                            <th class="p-4">Mês Ref.</th>
+                            <th class="p-4">Vencimento</th>
+                            <th class="p-4">Valor</th>
+                            <th class="p-4 text-center">Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaPendentesDesktop" class="text-sm divide-y text-slate-700"></tbody>
+                </table>
+            </div>
+            <div id="listaPendentesMobile" class="block md:hidden p-4 space-y-4 bg-slate-50/50"></div>
+            <div id="msgSemPendencias" class="p-8 text-center text-slate-500 font-medium hidden">🎉 Nenhuma mensalidade pendente encontrada!</div>
+        </section>
+
+        <div id="modalBaixa" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50">
+            <div class="bg-white p-6 rounded-2xl shadow-xl w-full max-w-sm">
+                <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">💰 Confirmar Recebimento</h3>
+                <input type="hidden" id="atualPagamentoId">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Forma de Pagamento</label>
+                        <select id="formaPagamento" class="w-full px-3 py-2 border rounded-lg bg-slate-50 focus:outline-none">
+                            <option value="Dinheiro">Dinheiro</option>
+                            <option value="Pix">Pix</option>
+                            <option value="Cartão de Crédito">Cartão de Crédito</option>
+                            <option value="Cartão de Débito">Cartão de Débito</option>
+                        </select>
+                    </div>
+                    <div class="flex gap-2 pt-2">
+                        <button onclick="confirmarBaixa()" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-lg transition cursor-pointer">Confirmar</button>
+                        <button onclick="fecharModalBaixa()" class="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 rounded-lg transition cursor-pointer">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        window.onload = function() {
+            if (verificarSessao()) {
+                carregarPendentes();
+            }
+        }
+
+        async function carregarPendentes() {
+            const tDesktop = document.getElementById('tabelaPendentesDesktop');
+            const lMobile = document.getElementById('listaPendentesMobile');
+            const msg = document.getElementById('msgSemPendencias');
+
+            tDesktop.innerHTML = "";
+            lMobile.innerHTML = "";
+            msg.classList.add('hidden');
+
+            // Busca os pagamentos pendentes trazendo junto os dados do aluno cadastrado
+            const { data: pendentes, error } = await _supabase
+                .from('pagamentos')
+                .select(`
+                    id, mes, vencimento, valor, status,
+                    alunos ( nome, modalidade )
+                `)
+                .eq('status', 'Pendente');
+
+            if (error) {
+                alert("Erro ao carregar pendências: " + error.message);
+                return;
+            }
+
+            if (!pendentes || pendentes.length === 0) {
+                msg.classList.remove('hidden');
+                return;
+            }
+
+            pendentes.forEach(p => {
+                const alunoNome = p.alunos ? p.alunos.nome : "Desconhecido";
+                const modalidade = p.alunos ? p.alunos.modalidade : "Não informada";
+
+                // Desktop
+                tDesktop.innerHTML += `
+                    <tr class="hover:bg-slate-50">
+                        <td class="p-4 font-bold text-slate-800">${alunoNome}</td>
+                        <td class="p-4"><span class="bg-orange-100 text-orange-700 px-2 py-0.5 rounded text-xs font-bold">${modalidade}</span></td>
+                        <td class="p-4 font-medium text-slate-600">${p.mes}</td>
+                        <td class="p-4 text-slate-500">${p.vencimento}</td>
+                        <td class="p-4 font-black text-slate-900">R$ ${parseFloat(p.valor).toFixed(2)}</td>
+                        <td class="p-4 text-center">
+                            <button onclick="abrirModalBaixa(${p.id})" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-1.5 rounded-lg font-bold transition cursor-pointer">✓ Dar Baixa</button>
+                        </td>
+                    </tr>
+                `;
+
+                // Mobile
+                lMobile.innerHTML += `
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col space-y-3">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="font-extrabold text-slate-800 text-base leading-tight">${alunoNome}</h4>
+                                <p class="text-xs text-slate-500 mt-0.5">Vencimento: ${p.vencimento} (Ref: ${p.mes})</p>
+                            </div>
+                            <span class="text-[10px] font-bold bg-orange-100 text-orange-700 px-2 py-0.5 rounded">${modalidade}</span>
+                        </div>
+                        <div class="flex items-center justify-between pt-2 border-t border-slate-100">
+                            <div class="font-black text-slate-900 text-base">R$ ${parseFloat(p.valor).toFixed(2)}</div>
+                            <button onclick="abrirModalBaixa(${p.id})" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs py-2 px-4 rounded-xl font-bold transition cursor-pointer">✓ Dar Baixa</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function abrirModalBaixa(id) {
+            document.getElementById('atualPagamentoId').value = id;
+            document.getElementById('modalBaixa').classList.remove('hidden');
+        }
+
+        function fecharModalBaixa() {
+            document.getElementById('modalBaixa').classList.add('hidden');
+        }
+
+        async function confirmarBaixa() {
+            const id = document.getElementById('atualPagamentoId').value;
+            const forma = document.getElementById('formaPagamento').value;
+            const hoje = new Date().toLocaleDateString('pt-BR');
+
+            const { error } = await _supabase
+                .from('pagamentos')
+                .update({
+                    status: 'Pago',
+                    forma_pagamento: forma,
+                    data_baixa: hoje
+                })
+                .eq('id', id);
+
+            if (error) {
+                alert("Erro ao processar pagamento: " + error.message);
+            } else {
+                alert("Pagamento baixado com sucesso!");
+                fecharModalBaixa();
+                await carregarPendentes();
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('arena_session');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
